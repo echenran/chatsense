@@ -38,7 +38,7 @@ class ProcessAudio(object):
     def __init__(self):
         # Load Vokaturi
         print ("Loading Vokaturi...")
-        self.vok.load(VOKATURI + "/lib/Vokaturi_mac.so")
+        self.vok.load(VOKATURI + "/lib/Vokaturi_linux64.so")
 
         # Load audiotranscode
         print ("Loading audiotranscode...")
@@ -117,6 +117,6 @@ class ProcessAudio(object):
 
 obj = ProcessAudio()
 #f = "./vokaturi/examples/hey-sweetness.wav"
-f = "../../Downloads/hurtme.mp3"
+f = "transmittedaudio.wav"
 obj.load(f)
 print(obj.analyze())
