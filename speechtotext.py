@@ -4,7 +4,7 @@ import io
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'C:/Users/Charlie/Desktop/codesense-43ac4dd2f444.json'
 
 def transcribe_file(speech_file):
-    #Transcribe the speech file
+    #Transcribe the speech file and returns it as a string
     #File must be .wav, mono 
     from google.cloud import speech
     from google.cloud.speech import enums
@@ -21,8 +21,12 @@ def transcribe_file(speech_file):
         language_code='en-US')
 
     response = client.recognize(config, audio)
+    text = ""
     for result in response.results:
-        print('Transcript: {}'.format(result.alternatives[0].transcript))
+        #print('Transcript: {}'.format(result.alternatives[0].transcript))
+        text += '{}'.format(result.alternatives[0].transcript)
+    return text
 
 filename = "C:\\Users\\Charlie\\Desktop\\speech\\strange.wav"  
-transcribe_file(filename)
+text = transcribe_file(filename)
+#print(text)
