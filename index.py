@@ -1,6 +1,6 @@
 from flask import Flask, flash, redirect, request
 import json
-#from processaudio import ProcessAudio
+from processaudio import ProcessAudio
 app = Flask(__name__)
 
 @app.route('/send', methods=['GET', 'POST'])
@@ -10,19 +10,29 @@ def process_send():
     print "[Request form]:", request.form
     
     if request.data:
+        AUDIOFILE = "transmittedaudio.wav"
+
         print "Got data back!"
-        res = open("transmittedaudio.wav", "w")
-        res.write(request.data)
+        f = open(AUDIOFILE, "w")
+        f.write(request.data)
         print "Wrote data!"
+        f.close()
+        lines = open(AUDIOFILE, "r").readlines()
+        print "line[0]: {}".format(lines[0])
+        lines[0] = ""
+        print "delet'd"
+        print "line[0]: {}".format(lines[0])
+        f = open(AUDIOFILE, 'w')
+        for line in lines:
+            f.write(line)
 
-        res.close()
+        f.close()
         print "Closed file!"
-        #pa = ProcessAudio()
-        #pa.load(request.data)
-        #res = pa.analyze()
+        pa = ProcessAudio()
+        pa.load(AUDIOFILE)
+        res = pa.analyze()
 
-    #return "Received\nProcessed:",res
-    return "Got request"
+    return str(res)
 
 @app.route('/getback', methods=['GET', 'POST'])
 def process_getback():
