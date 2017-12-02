@@ -50,6 +50,9 @@ public class pingServer
 			conn.setRequestProperty("Content-Type", "Sending file");
 
 			dos = new DataOutputStream(conn.getOutputStream());
+			
+			dos.writeBytes("Content-Disposition: name=\"" + file.toString()
+                     + lineEnd);
 
 			// create a buffer of maximum size
 			buffer = new byte[Math.min((int) file.length(), maxBufferSize)];
