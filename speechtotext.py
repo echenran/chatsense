@@ -1,7 +1,7 @@
-#!/usr/bin/env python
-import os, io
+import os
+import io
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = './codesense-43ac4dd2f444.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'C:/Users/Charlie/Desktop/codesense-43ac4dd2f444.json'
 
 def transcribe_file(speech_file):
     #Transcribe the speech file and returns it as a string
@@ -27,6 +27,6 @@ def transcribe_file(speech_file):
         text += '{}'.format(result.alternatives[0].transcript)
     return text
 
-filename = "/Users/ecr/Downloads/strange.wav"  
+filename = "C:\\Users\\Charlie\\Desktop\\speech\\strange.wav"  
 text = transcribe_file(filename)
-print(text)
+#print(text)
