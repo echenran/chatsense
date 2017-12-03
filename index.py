@@ -59,7 +59,7 @@ def process_send():
         # Here's where the magic happens
         pa = ProcessAudio()
         pa.load(AUDIOFILE, originalname)
-        res = pa.report()
+        res = pa.analyze()
         print "Got report:", res
         
         # Format emotions data
