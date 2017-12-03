@@ -1,6 +1,7 @@
 package com.chatsense.chatsense;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
@@ -9,6 +10,7 @@ import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +24,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.rockerhieu.emojicon.EmojiconTextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,6 +51,7 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
     public String filePath;
 
     String returnData;
+    String chatLogStr;
 
     //Loads the name of the user you're texting
     TextView userTexting;
@@ -67,6 +74,9 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
 
         final ImageButton playButton = (ImageButton) findViewById(R.id.playButton);
         playButton.setOnClickListener(this);
+
+
+
 
     }
 
@@ -189,7 +199,11 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
                     {
                         Thread.sleep(1000);
                     }
-                    initializeEmojiChat(returnData);
+                    try {
+                        initializeEmojiChat(returnData);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -209,6 +223,7 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
         @Override
         protected String doInBackground(Void... voids) {
             String s = "";
+            String chatlog = "";
             try {
                 s = PingServer.upload();
             }
@@ -216,30 +231,40 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
             e.printStackTrace();
             }
 
+            chatLogStr = chatlog;
             returnData = s;
             return s;
         }
     }
 
+    public static Drawable setTint(Drawable drawable, int color) {
+        final Drawable newDrawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(newDrawable, color);
+        return newDrawable;
+    }
 
-    public void initializeEmojiChat(String data) throws InterruptedException {
+    public void initializeEmojiChat(String data) throws InterruptedException, JSONException {
         returnData = null;
         View text = LayoutInflater.from(this).inflate(R.layout.emojichat, null);
         LinearLayout chat_history = (LinearLayout) findViewById(R.id.TEXT_HISTORY) ;
         chat_history.addView(text);
 
-        String textVar = data.split(":")[1].split(",")[0];
+        JSONObject obj = new JSONObject(data);
+        String textVar = obj.getString("text");
+        String time = obj.getString("timestr").substring(1);
+        JSONObject emotions = new JSONObject(obj.getString("emotions"));
+        JSONObject color = new JSONObject(obj.getString("color"));
 
-        textVar = textVar.substring(2,textVar.length()-1);
+        int neutrality = emotions.getInt("neutrality");
+        int anger = emotions.getInt("anger");
+        int happiness = emotions.getInt("happiness");
+        int sadness = emotions.getInt("sadness");
+        int fear = emotions.getInt("fear");
 
-        String time = data.split(": ")[2].split(",")[0];
-        time = time.substring(1,time.length()-1);
-
-        Integer anger = Integer.parseInt(data.split(": ")[5].split(",")[0]);
-        Integer neutrality = Integer.parseInt(data.split(": ")[6].split(",")[0]);
-        Integer sadness = Integer.parseInt(data.split(": ")[7].split(",")[0]);
-        Integer fear = Integer.parseInt(data.split(": ")[8].split(",")[0]);
-        Integer happiness = Integer.parseInt(data.split(": ")[9].substring(0,1));
+        int red = color.getInt("red");
+        int blue = color.getInt("blue");
+        int alpha = color.getInt("alpha");
+        int green = color.getInt("green");
 
         EmojiconTextView emoji = (EmojiconTextView) text.findViewById(R.id.emoji);
         Button bubble = (Button) text.findViewById(R.id.chat_bubble);
@@ -248,7 +273,7 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
         bubble.setText(textVar);
         date.setText(time);
         emoji.setText(getEmojiFromValues(neutrality,happiness,sadness,anger,fear));
-    //    bubble.setBackgroundColor(getColorFromValues(neutrality,happiness,sadness,anger,fear));*/
+        bubble.setBackgroundColor(Color.argb(alpha,red,green,blue));
 
     }
 
@@ -257,7 +282,7 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
 
         String[] SAD = {"\uD83D\uDE14","\uD83D\uDE1E","\uD83D\uDE2D"};
 
-        String[] FEAR = {"\uD83D\uDE2C","\uD83D\uDE28","\uD83D\uDE31"};
+        String[] FEAR = {"\uD83D\uDE2C","\uD83D\uDE28","\uD83E\uDD14"};
 
         String[] HAPPY = {"\uD83D\uDE0A","\uD83D\uDE03","\uD83D\uDE02"};
 

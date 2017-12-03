@@ -49,7 +49,7 @@ public class PingServer
 			conn.setUseCaches(false);
 			// Use a post method
 			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "Sending file");
+			conn.setRequestProperty("Content-Type", Conversations.getUser());
 			conn.addRequestProperty("num_messages", "20");
 
 			dos = new DataOutputStream(conn.getOutputStream());
@@ -91,4 +91,5 @@ public class PingServer
 		}
 
 	}
+
 }

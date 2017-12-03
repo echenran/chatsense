@@ -9,12 +9,14 @@ import android.widget.TextView;
 
 public class Conversations extends AppCompatActivity implements View.OnClickListener{
 
+    static TextView username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversations);
 
-        TextView username = (TextView) findViewById(R.id.username);
+        username = (TextView) findViewById(R.id.username);
 
         Bundle extras = getIntent().getExtras();
         username.setText(extras.getString("user"));
@@ -30,5 +32,10 @@ public class Conversations extends AppCompatActivity implements View.OnClickList
         Intent i = new Intent(this, Chat.class);
         i.putExtra("whose_mans",b.getText().toString());
         startActivity(i);
+    }
+
+    public static String getUser()
+    {
+        return username.getText().toString();
     }
 }
