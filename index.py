@@ -40,7 +40,7 @@ def process_send():
     timestr = time.strftime("%I:%M", time.localtime())
     
     if request.data:
-        AUDIOFILE = "transmittedaudio.wav"
+        AUDIOFILE = "transmittedaudio.pcm"
 
         print "Got data back!"
         f = open(AUDIOFILE, "w")

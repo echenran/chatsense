@@ -38,6 +38,7 @@ class ProcessAudio(object):
             old.export(newfilename, format=WAV)
             self.filename = newfilename
         elif ext == PCM:
+            print "This is a PCM file!"
 	    pcmfile = open(audiofile, 'rb')
 	    pcmdata = pcmfile.read()
 	    pcmfile.close()
