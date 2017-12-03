@@ -17,10 +17,40 @@ public class PingServer
 	 private static String twoHyphens = "--";
 	 private static String boundary = "AaB03x87yxdkjnxvi7";
 	 private static URL url;
-	   
-	public static void main(String args[]) throws IOException
+
+	public static String retrieveHistory() throws IOException
 	{
-		upload();
+		HttpURLConnection conn = null;
+		DataInputStream dis = null;
+
+		//client request
+		// open a URL connection to the Servlet
+		url = new URL("http://chatsense.pythonanywhere.com/getconvomsgsAmyJake");
+		// Open a HTTP connection to the URL
+		conn = (HttpURLConnection) url.openConnection();
+		// Allow inputs
+		conn.setDoInput(true);
+		// Allow outputs
+		conn.setDoOutput(true);
+		// Don't use a cached copy
+		conn.setUseCaches(false);
+		// Use a post method
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("Message History", "AmyJake");
+		conn.addRequestProperty("num_messages", "20");
+		//reads the server response
+		try {
+			dis = new DataInputStream(conn.getInputStream());
+			StringBuilder response = new StringBuilder();
+			String line;
+			while ((line = dis.readLine()) != null) {
+				response.append(line).append('\n');
+			}
+		    return response.toString();
+		} finally {
+			if (dis != null) dis.close();
+		}
+
 	}
 
 	public static String upload() throws IOException
@@ -84,7 +114,6 @@ public class PingServer
 				response.append(line).append('\n');
 			}
 
-			System.out.println(response.toString());
 			return response.toString();
 		} finally {
 			if (dis != null) dis.close();
