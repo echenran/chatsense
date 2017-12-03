@@ -75,9 +75,6 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
         final ImageButton playButton = (ImageButton) findViewById(R.id.playButton);
         playButton.setOnClickListener(this);
 
-
-
-
     }
 
 
