@@ -9,10 +9,12 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,10 +22,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class Chat extends AppCompatActivity implements View.OnFocusChangeListener, View.OnClickListener{
+
+public class Chat extends AppCompatActivity implements  View.OnClickListener{
 
     boolean doRun = true;
     boolean isRecording = false;
@@ -53,8 +54,10 @@ public class Chat extends AppCompatActivity implements View.OnFocusChangeListene
 
         //Recording button
         final Button recordButton = (Button) findViewById(R.id.record);
-        recordButton.setOnFocusChangeListener(this);
         recordButton.setOnClickListener(this);
+
+        final ImageButton playButton = (ImageButton) findViewById(R.id.playButton);
+        playButton.setOnClickListener(this);
 
     }
 
@@ -156,7 +159,10 @@ public class Chat extends AppCompatActivity implements View.OnFocusChangeListene
     {
         if (view.getId() == R.id.record) {
             try {
-                startRecording(view);
+                if (!isRecording) {
+                    startRecording(view);
+                    initializeEmojiChat();
+                }
             }
             catch (Exception e)
             {
@@ -165,6 +171,7 @@ public class Chat extends AppCompatActivity implements View.OnFocusChangeListene
         }
         if (view.getId() == R.id.playButton)
         {
+            stopRecording(view);
             playRecording(view);
 
         }
@@ -172,9 +179,15 @@ public class Chat extends AppCompatActivity implements View.OnFocusChangeListene
 
     public void onFocusChange(View view, Boolean hasFocus)
     {
-        if (hasFocus == false)
+        if (!hasFocus)
         stopRecording(view);
 
     }
 
+    public void initializeEmojiChat()
+    {
+        View text = LayoutInflater.from(this).inflate(R.layout.emojichat, null);
+        LinearLayout chat_history = (LinearLayout) findViewById(R.id.TEXT_HISTORY) ;
+        chat_history.addView(text);
+    }
 }

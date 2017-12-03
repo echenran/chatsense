@@ -5,9 +5,9 @@
 
     <RelativeLayout
         android:id="@+id/emojichat"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-  >
+ >
 
         <Button
             android:id="@+id/chat_bubble"
@@ -16,21 +16,21 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="118dp"
-            android:layout_marginStart="17dp"
+            android:layout_marginStart="13dp"
             android:text="Hey"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            />
+       />
 
         <com.rockerhieu.emojicon.EmojiconTextView
             android:id="@+id/emoji"
             android:layout_width="34dp"
             android:layout_height="35dp"
+            android:layout_alignBottom="@+id/chat_bubble"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="34dp"
             android:text="😂"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+     />
 
         <TextView
             android:id="@+id/date"
@@ -39,8 +39,10 @@
 
             android:layout_alignBaseline="@+id/chat_bubble"
             android:layout_alignBottom="@+id/chat_bubble"
+            android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/chat_bubble"
-            android:text="5:35pm" />
+            android:text="5:35pm"
+      />
 
     </RelativeLayout>
 
