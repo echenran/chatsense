@@ -25,6 +25,7 @@ class ProcessAudio(object):
         self.vok.load(VOKATURI + "/lib/Vokaturi_mac.so")
 
         self.filename = None
+        self.report = {}
 
     def load(self, audiofile, originalname):
         # Load + convert audio
@@ -91,7 +92,37 @@ class ProcessAudio(object):
 
         voice.destroy()
 
-        return res
+        self.report["emotions"] = res
+
+        return
+
+    def calculate_color(self):
+        l = [(key, self.report['emotions'][key]) for key in self.report['emotions']]
+        order = sorted(l, key=lambda x: x[1], reverse=True)
+        print order
+
+        r = g = b = 255
+
+        if order[0][0] == "anger":
+            r = 255 * order[0][1]
+        elif order[0][0] == "fear":
+            g = 255 * order[0][1]
+        elif order[0][0] == "happiness":
+            r = g = 255 * order[0][1] * .7
+        elif order[0][0] == "sadness":
+            b = 255 * order[0][1]
+        elif order[0][0] == "neutrality":
+            r = 255 * self.report['emotion']['anger']   * .8
+            g = 255 * self.report['emotion']['fear']    * .8
+            b = 255 * self.report['emotion']['sadness'] * .8
+
+        a = 255 * self.report['emotions']['neutrality']
+        self.report['alpha'] = str(int(round(a)))
+        self.report['red'] = str(int(round(r)))
+        self.report['green'] = str(int(round(g)))
+        self.report['blue'] = str(int(round(b)))
+
+        return
 
     def analyze_text(self):
         """ Transcribe the speech file and returns it as a string;can only be 
@@ -115,14 +146,19 @@ class ProcessAudio(object):
         for result in response.results:
             #print('Transcript: {}'.format(result.alternatives[0].transcript))
             text += '{}'.format(result.alternatives[0].transcript)
-        return text
+        
+        self.report['text'] = text
 
-    def report(self):
+        return
+
+    def analyze(self):
         """ Returns an object with the text spoken and the emotions in
         the speaker's tone """
-        res = {
-            "text": self.analyze_text(),
-            "emotions": self.analyze_emotion()
-        }
+        print "Analyzing emotion.."
+        self.analyze_emotion()
+        print "Analyzing speech to text.."
+        self.analyze_text()
+        print "Calculating color.."
+        self.calculate_color()
 
-        return res
+        return self.report
