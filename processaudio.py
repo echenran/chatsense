@@ -112,9 +112,9 @@ class ProcessAudio(object):
         elif order[0][0] == "sadness":
             b = 255 * order[0][1]
         elif order[0][0] == "neutrality":
-            r = 255 * self.report['emotion']['anger']   * .8
-            g = 255 * self.report['emotion']['fear']    * .8
-            b = 255 * self.report['emotion']['sadness'] * .8
+            r = 255 * self.report['emotions']['anger']   * .8
+            g = 255 * self.report['emotions']['fear']    * .8
+            b = 255 * self.report['emotions']['sadness'] * .8
 
         a = 255 * self.report['emotions']['neutrality']
         self.report['alpha'] = str(int(round(a)))
