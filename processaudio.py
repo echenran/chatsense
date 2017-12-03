@@ -22,9 +22,10 @@ class ProcessAudio(object):
 
     def __init__(self):
         # Load Vokaturi
-        self.vok.load(VOKATURI + "/lib/Vokaturi_mac.so")
+        self.vok.load(VOKATURI + "/lib/Vokaturi_linux64.so")
 
         self.filename = None
+        self.emotions = None
 
     def load(self, audiofile, originalname):
         # Load + convert audio
@@ -90,6 +91,7 @@ class ProcessAudio(object):
             print ("Not enough sonorancy to determine emotions")
 
         voice.destroy()
+        self.emotions = res
 
         return res
 
@@ -117,12 +119,49 @@ class ProcessAudio(object):
             text += '{}'.format(result.alternatives[0].transcript)
         return text
 
+    def calculate_color(self):
+        l = [(key, self.emotions[key]) for key in self.emotions]
+        order = sorted(l, key=lambda x: x[1], reverse=True)
+        print order
+
+        r = g = b = 255
+
+        if order[0][0] == "anger":
+            r = 255 * order[0][1]
+            g = 255 * self.emotions['fear'] * .25
+            b = 255 * (1-self.emotions['anger'])
+        elif order[0][0] == "fear":
+            g = 255 * order[0][1]
+            r = 255 * self.emotions['anger'] * .25
+            b = 255 * self.emotions['fear']
+        elif order[0][0] == "happiness":
+            r = g = 255 * order[0][1] * .8
+            b = 255 * (1-self.emotions['sadness']) * .25
+        elif order[0][0] == "sadness":
+            b = 255 * order[0][1]
+            r = 255 * self.emotions['anger'] * .3
+            g = 255 * self.emotions['fear'] * .25
+        elif order[0][0] == "neutrality":
+            r = 255 * self.emotions['anger']   * .6
+            g = 255 * self.emotions['fear']    * .6
+            b = 255 * self.emotions['sadness'] * .6
+
+        a = 255 * (1-self.emotions['neutrality'])
+        res = {}
+        res['alpha'] = str(int(round(a)))
+        res['red'] = str(int(round(r)))
+        res['green'] = str(int(round(g)))
+        res['blue'] = str(int(round(b)))
+
+        return res
+
     def report(self):
         """ Returns an object with the text spoken and the emotions in
         the speaker's tone """
         res = {
             "text": self.analyze_text(),
-            "emotions": self.analyze_emotion()
+            "emotions": self.analyze_emotion(),
+            "color": self.calculate_color()
         }
 
         return res
