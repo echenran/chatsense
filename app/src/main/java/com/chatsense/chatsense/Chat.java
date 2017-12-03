@@ -1,10 +1,12 @@
 package com.chatsense.chatsense;
 
+import android.graphics.Color;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -12,16 +14,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.rockerhieu.emojicon.EmojiconTextView;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 
 
 public class Chat extends AppCompatActivity implements  View.OnClickListener{
@@ -38,13 +44,16 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
     Thread recordingThread = null;
     public String filePath;
 
+    String returnData;
+
+    //Loads the name of the user you're texting
+    TextView userTexting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        //Loads the name of the user you're texting
-        TextView userTexting = (TextView) findViewById(R.id.userTexting);
+        userTexting = (TextView) findViewById(R.id.userTexting);
         Bundle extras = getIntent().getExtras();
         userTexting.setText(extras.getString("whose_mans"));
 
@@ -96,8 +105,7 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
     }
 
     private void writeAudioDataToFile() {
-        filePath = Environment.getExternalStorageDirectory().getPath()+ File.separator +
-                "message.pcm";
+        filePath = Environment.getExternalStorageDirectory().getPath()+ File.separator + "message.pcm";
         short sData[] = new short[BUFFER_ELEM_TO_REC];
         /** Java can't use shorts, need to convert to bytes**/
 
@@ -161,7 +169,6 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
             try {
                 if (!isRecording) {
                     startRecording(view);
-                    initializeEmojiChat();
                 }
             }
             catch (Exception e)
@@ -171,9 +178,23 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
         }
         if (view.getId() == R.id.playButton)
         {
-            stopRecording(view);
-            playRecording(view);
+            if (isRecording) {
+                stopRecording(view);
 
+                SendFeedbackJob job = new SendFeedbackJob();
+                job.execute();
+
+                try {
+                    while (returnData == null)
+                    {
+                        Thread.sleep(1000);
+                    }
+                    initializeEmojiChat(returnData);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 
@@ -183,11 +204,103 @@ public class Chat extends AppCompatActivity implements  View.OnClickListener{
         stopRecording(view);
 
     }
+    private class SendFeedbackJob extends AsyncTask<Void, Void, String> {
 
-    public void initializeEmojiChat()
-    {
+        @Override
+        protected String doInBackground(Void... voids) {
+            String s = "";
+            try {
+                s = PingServer.upload();
+            }
+            catch (Exception e) {
+            e.printStackTrace();
+            }
+
+            returnData = s;
+            return s;
+        }
+    }
+
+
+    public void initializeEmojiChat(String data) throws InterruptedException {
+        returnData = null;
         View text = LayoutInflater.from(this).inflate(R.layout.emojichat, null);
         LinearLayout chat_history = (LinearLayout) findViewById(R.id.TEXT_HISTORY) ;
         chat_history.addView(text);
+
+        String textVar = data.split(":")[1].split(",")[0];
+
+        textVar = textVar.substring(2,textVar.length()-1);
+
+        String time = data.split(": ")[2].split(",")[0];
+        time = time.substring(1,time.length()-1);
+
+        Integer anger = Integer.parseInt(data.split(": ")[5].split(",")[0]);
+        Integer neutrality = Integer.parseInt(data.split(": ")[6].split(",")[0]);
+        Integer sadness = Integer.parseInt(data.split(": ")[7].split(",")[0]);
+        Integer fear = Integer.parseInt(data.split(": ")[8].split(",")[0]);
+        Integer happiness = Integer.parseInt(data.split(": ")[9].substring(0,1));
+
+        EmojiconTextView emoji = (EmojiconTextView) text.findViewById(R.id.emoji);
+        Button bubble = (Button) text.findViewById(R.id.chat_bubble);
+        TextView date = (TextView) text.findViewById(R.id.date);
+
+        bubble.setText(textVar);
+        date.setText(time);
+        emoji.setText(getEmojiFromValues(neutrality,happiness,sadness,anger,fear));
+    //    bubble.setBackgroundColor(getColorFromValues(neutrality,happiness,sadness,anger,fear));*/
+
+    }
+
+    public String getEmojiFromValues(int neutral, int happy, int sad, int angry, int fear) {
+        String NEUTRAL = "\uD83D\uDE36";
+
+        String[] SAD = {"\uD83D\uDE14","\uD83D\uDE1E","\uD83D\uDE2D"};
+
+        String[] FEAR = {"\uD83D\uDE2C","\uD83D\uDE28","\uD83D\uDE31"};
+
+        String[] HAPPY = {"\uD83D\uDE0A","\uD83D\uDE03","\uD83D\uDE02"};
+
+        String[] ANGRY = {"\uD83D\uDE12","\uD83D\uDE20","\uD83D\uDE21"};
+
+        int i;
+        if (neutral > 85)
+        {
+            return NEUTRAL;
+        }
+        if (neutral > 55)
+        {
+            i = 0;
+        }
+        if (neutral > 35)
+        {
+            i = 1;
+        }
+        else
+        {
+            i = 2;
+        }
+
+
+        int max = Integer.max(Integer.max(sad, happy),Integer.max(angry, fear));
+        if (happy == max)
+        {
+            return HAPPY[i];
+        }
+        if (sad == max)
+        {
+            return SAD[i];
+        }
+        if (angry == max)
+        {
+            return ANGRY[i];
+        }
+        if (fear == max)
+        {
+            return FEAR[i];
+        }
+
+
+        return NEUTRAL;
     }
 }
