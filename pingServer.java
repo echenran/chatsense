@@ -48,7 +48,6 @@ public class pingServer
 			// Use a post method
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "Sending file");
-			conn.addRequestProperty("num_messages", "20");
 
 			dos = new DataOutputStream(conn.getOutputStream());
 			
