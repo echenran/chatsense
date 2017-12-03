@@ -1,4 +1,6 @@
-package pingServer;
+package com.chatsense.chatsense;
+
+import android.os.Environment;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -9,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class pingServer
+public class PingServer
 {
 	 private static String lineEnd = "\r\n";
 	 private static String twoHyphens = "--";
@@ -21,13 +23,13 @@ public class pingServer
 		upload();
 	}
 
-	public static void upload() throws IOException 
+	public static String upload() throws IOException
 	{
 		HttpURLConnection conn = null;
 		DataOutputStream dos = null;
 		DataInputStream dis = null;
 		FileInputStream fileInputStream = null;
-		String fileParameterName = "C:\\Users\\Charlie\\Desktop\\speech\\strange.wav";
+		String fileParameterName = Environment.getExternalStorageDirectory().getPath()+ File.separator + "message.pcm";
 		url = new URL("http://chatsense.pythonanywhere.com/send");
 		byte[] buffer;
 		int maxBufferSize = 20 * 1024;
@@ -83,6 +85,7 @@ public class pingServer
 			}
 
 			System.out.println(response.toString());
+			return response.toString();
 		} finally {
 			if (dis != null) dis.close();
 		}
