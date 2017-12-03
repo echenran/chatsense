@@ -92,50 +92,63 @@
         app:layout_constraintVertical_bias="0.884"
         app:srcCompat="@drawable/divider" />
 
-    <Button
-        android:id="@+id/chat_bubble"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="51dp"
-        android:layout_marginLeft="16dp"
-        android:text="Hey"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintBottom_toTopOf="@+id/imageView6"
-        app:layout_constraintEnd_toStartOf="@+id/imageView6"
-        app:layout_constraintHorizontal_bias="0.767"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="5:35pm"
-        app:layout_constraintBottom_toTopOf="@+id/imageView6"
-        app:layout_constraintEnd_toStartOf="@+id/chat_bubble"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toEndOf="@+id/chat_bubble"
-        app:layout_constraintTop_toBottomOf="@+id/chat_bubble"
-        app:layout_constraintVertical_bias="0.368"
-        tools:text="5:35 pm" />
-
-    <com.rockerhieu.emojicon.EmojiconTextView
-        android:id="@+id/emoji"
-        android:layout_width="34dp"
-        android:layout_height="35dp"
-        android:layout_marginRight="16dp"
-        android:text="😂s"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+    <RelativeLayout
+        android:id="@+id/emojichat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.725"
-        tools:text="😂" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/chat_bubble"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="118dp"
+            android:layout_marginStart="17dp"
+            android:text="Hey"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintHorizontal_bias="0.767"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <com.rockerhieu.emojicon.EmojiconTextView
+            android:id="@+id/emoji"
+            android:layout_width="34dp"
+            android:layout_height="35dp"
+            android:layout_alignBottom="@+id/chat_bubble"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="34dp"
+            android:text="😂"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.712"
+            tools:text="😂" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignBaseline="@+id/chat_bubble"
+            android:layout_alignBottom="@+id/chat_bubble"
+            android:layout_toEndOf="@+id/chat_bubble"
+            android:text="5:35pm"
+            app:layout_constraintHorizontal_bias="0.503"
+            app:layout_constraintVertical_bias="0.368"
+            tools:text="5:35 pm" />
+
+    </RelativeLayout>
 
 
 </android.support.constraint.ConstraintLayout>
