@@ -17,19 +17,6 @@ def process_getconvoprev():
 
     return str(msgs)
 
-""" Get the last 20 messages of a conversation """
-@app.route('/getconvomsgs', methods=['GET', 'POST'])
-def process_getconvomsgs():
-    print request.form
-    user1 = request.form['user1']
-    user2 = request.form['user2']
-    howmany = request.form['num_msgs']
-    
-    convo = open("convo.json", 'r')
-    msgs = convo.read()
-
-    return str(msgs)
-
 @app.route('/send', methods=['GET', 'POST'])
 def process_send():
     print "[Request headers]:", request.headers
@@ -73,10 +60,10 @@ def process_send():
         pa = ProcessAudio()
         pa.load(AUDIOFILE, originalname)
         res = pa.report()
+        print "Got report:", res
         
         # Format emotions data
         for key in res["emotions"].keys():
-            print "rounding {}={}".format(key, res['emotions'][key])
             res['emotions'][key] = int(round(res['emotions'][key]*100))
 
         # Add time and date
@@ -97,6 +84,82 @@ def process_getback():
         print "[Request data]:", request.data
 
     return "Not done yet\n"
+
+""" Get the last 20 messages of Amy/Jake convo"""
+@app.route('/getconvomsgsAmyJake', methods=['GET', 'POST'])
+def process_getconvomsgsAmyJake():
+    print request.form
+    
+    convo = open("amyjake.json", 'r')
+    msgs = convo.read()
+    print(msgs)
+
+    return str(msgs)
+
+""" Get the last 20 messages of Amy/Charlie convo"""
+@app.route('/getconvomsgsAmyCharlie', methods=['GET', 'POST'])
+def process_getconvomsgsAmyCharlie():
+    print request.form
+    user1 = request.form['user1']
+    user2 = request.form['user2']
+    howmany = request.form['num_msgs']
+    
+    convo = open("convo.json", 'r')
+    msgs = convo.read()
+
+    return str(msgs)
+
+""" Get the last 20 messages of Amy/ECR convo"""
+@app.route('/getconvomsgsAmyECR', methods=['GET', 'POST'])
+def process_getconvomsgsAmyECR():
+    print request.form
+    user1 = request.form['user1']
+    user2 = request.form['user2']
+    howmany = request.form['num_msgs']
+    
+    convo = open("convo.json", 'r')
+    msgs = convo.read()
+
+    return str(msgs)
+
+""" Get the last 20 messages of Jake/Charlie convo"""
+@app.route('/getconvomsgsJakeCharlie', methods=['GET', 'POST'])
+def process_getconvomsgsJakeCharlie():
+    print request.form
+    user1 = request.form['user1']
+    user2 = request.form['user2']
+    howmany = request.form['num_msgs']
+    
+    convo = open("convo.json", 'r')
+    msgs = convo.read()
+
+    return str(msgs)
+
+""" Get the last 20 messages of Jake/ECR convo"""
+@app.route('/getconvomsgsJakeECR', methods=['GET', 'POST'])
+def process_getconvomsgsJakeECR():
+    print request.form
+    user1 = request.form['user1']
+    user2 = request.form['user2']
+    howmany = request.form['num_msgs']
+    
+    convo = open("convo.json", 'r')
+    msgs = convo.read()
+
+    return str(msgs)
+
+""" Get the last 20 messages of ECR/Charlie convo"""
+@app.route('/getconvomsgsECRCharlie', methods=['GET', 'POST'])
+def process_getconvomsgsECRCharlie():
+    print request.form
+    user1 = request.form['user1']
+    user2 = request.form['user2']
+    howmany = request.form['num_msgs']
+    
+    convo = open("convo.json", 'r')
+    msgs = convo.read()
+
+    return str(msgs)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
