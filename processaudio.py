@@ -46,31 +46,18 @@ class ProcessAudio(object):
 
         self.filename = None
 
-    def load(self, filepath):
+    def load(self, audiofile, originalname):
         # Load + convert audio
-        """oldfilename = newfilename = filepath.split("/")[-1]
-        print ("Loading sound file <{}>...".format(oldfilename))
-        if oldfilename.split(".")[-1].lower() != WAV:
-            print ("Converting sound file from .{} to .{}...".format(oldfilename.split(".")[-1], WAV))
-            newfilename = oldfilename.split(".")[0] + "." + WAV
-            self.at.transcode(filepath, newfilename)
-            self.filename = newfilename
 
-            print("oldfilename: {} newfilename: {} ({} bytes)".format(oldfilename, newfilename, os.path.getsize("./"+newfilename)))
-        else:
-            self.filename = filepath"""
-        oldfilename = newfilename = filepath.split("/")[-1]
-        print ("Loading sound file <{}>...".format(oldfilename))
-        if oldfilename.split(".")[-1].lower() != WAV:
-            print ("Converting sound file from .{} to .{}...".format(oldfilename.split(".")[-1], WAV))
-            newfilename = oldfilename.split(".")[0] + "." + WAV
-            old = AudioSegment.from_mp3(filepath)
+        print ("Loading sound file <{}>...".format(originalname))
+        if originalname.split(".")[-1].lower() != WAV:
+            #print ("Converting sound file from .{} to .{}...".format(originalname.split(".")[-1], WAV))
+            newfilename = originalname.split(".")[0] + "." + WAV
+            old = AudioSegment.from_mp3(audiofile)
             old.export(newfilename, format=WAV)
             self.filename = newfilename
-
-            print("oldfilename: {} newfilename: {} ({} bytes)".format(oldfilename, newfilename, os.path.getsize("./"+newfilename)))
         else:
-            self.filename = filepath
+            self.filename = audiofile
 
 
     def analyze(self):
