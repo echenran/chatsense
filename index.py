@@ -129,7 +129,7 @@ def process_addmsgAmyJake():
         res['timestr'] = timestr
 
         with open("amyjake.json", "a") as convo:
-            convo.write("|".join([
+            convo.write("~".join([
                      datestr, 
                      timestr, 
                      res['alpha'], 
