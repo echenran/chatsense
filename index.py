@@ -59,7 +59,7 @@ def process_send():
         # Here's where the magic happens
         pa = ProcessAudio()
         pa.load(AUDIOFILE, originalname)
-        res = pa.report()
+        res = pa.analyze()
         print "Got report:", res
         
         # Format emotions data
@@ -95,6 +95,58 @@ def process_getconvomsgsAmyJake():
     print(msgs)
 
     return str(msgs)
+
+""" Get the last 20 messages of Amy/Jake convo"""
+@app.route('/addmsgAmyJake', methods=['GET', 'POST'])
+def process_addmsgAmyJake():
+
+    datestr = time.strftime("%m/%d", time.localtime())
+    timestr = time.strftime("%I:%M", time.localtime())
+    
+    if request.data:
+        AUDIOFILE = "transmittedaudio.pcm"
+
+        print "Got data back!"
+        f = open(AUDIOFILE, "w")
+        f.write(request.data)
+        print "Wrote data!"
+        f.close()
+
+        lines = open(AUDIOFILE, "r").readlines()
+
+        # Here's where the magic happens
+        pa = ProcessAudio()
+        pa.load(AUDIOFILE, AUDIOFILE)
+        res = pa.analyze()
+        print "Got report:", res
+        
+        # Format emotions data
+        for key in res["emotions"].keys():
+            res['emotions'][key] = int(round(res['emotions'][key]*100))
+
+        # Add time and date
+        res['datestr'] = datestr
+        res['timestr'] = timestr
+
+        with open("amyjake.json", "a") as convo:
+            convo.write("~".join([
+                     datestr, 
+                     timestr, 
+                     res['alpha'], 
+                     res['red'], 
+                     res['green'], 
+                     res['blue'], 
+                     str(res['emotions']['anger']),
+                     str(res['emotions']['neutrality']),
+                     str(res['emotions']['sadness']),
+                     str(res['emotions']['fear']),
+                     str(res['emotions']['happiness']),
+                     res['text']
+                 ])+"\n")
+    
+        return str(res)
+    
+    return "File was not successfully sent"
 
 """ Get the last 20 messages of Amy/Charlie convo"""
 @app.route('/getconvomsgsAmyCharlie', methods=['GET', 'POST'])
