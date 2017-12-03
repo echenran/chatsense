@@ -16,10 +16,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="13dp"
+            android:layout_marginStart="12dp"
             android:text="Hey"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-       />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <com.rockerhieu.emojicon.EmojiconTextView
             android:id="@+id/emoji"
