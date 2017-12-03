@@ -128,7 +128,6 @@ def process_addmsgAmyJake():
         res['datestr'] = datestr
         res['timestr'] = timestr
 
-        print "about to add:", res
         with open("amyjake.json", "a") as convo:
             convo.write("|".join([
                      datestr, 
@@ -137,6 +136,11 @@ def process_addmsgAmyJake():
                      res['red'], 
                      res['green'], 
                      res['blue'], 
+                     str(res['emotions']['anger']),
+                     str(res['emotions']['neutrality']),
+                     str(res['emotions']['sadness']),
+                     str(res['emotions']['fear']),
+                     str(res['emotions']['happiness']),
                      res['text']
                  ])+"\n")
     
