@@ -1,0 +1,31 @@
+{ "messages": [
+		{
+			"datestr": "12/03",
+			"timestr": "05:58 PM",
+			"alpha": "16",
+			"red": "255",
+			"green": "255",
+			"blue": "239",
+			"anger": "0",
+			"neutrality": "6",
+			"sadness": "94",
+			"fear": "0",
+			"happiness": "0",
+			"text": "hello how's it going"
+		},
+		{
+			"datestr": "12/03",
+			"timestr": "05:59 PM",
+			"alpha": "0",
+			"red": "110",
+			"green": "110",
+			"blue": "255",
+			"anger": "38",
+			"neutrality": "0",
+			"sadness": "0",
+			"fear": "0",
+			"happiness": "62",
+			"text": "hey sweetness"
+		}
+	]
+}
