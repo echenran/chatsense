@@ -8,7 +8,7 @@ from pydub import AudioSegment
 WAV = "wav"
 MP3 = "mp3"
 PCM = "pcm"
-VOKATURI = "./vokaturi"
+VOKATURI = "../vokaturi"
 
 class ProcessAudio(object):
 
