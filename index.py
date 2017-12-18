@@ -1,21 +1,8 @@
 from flask import Flask, flash, redirect, request
-import json, re
+import json
 from processaudio import ProcessAudio
 import time
 app = Flask(__name__)
-
-""" Get one-message preview of a conversation """
-@app.route('/getconvoprev', methods=['GET', 'POST'])
-def process_getconvoprev():
-    print request.form
-    user1 = request.form['user1']
-    user2 = request.form['user2']
-    howmany = request.form['num_msgs']
-    
-    convo = open("convo.json", 'r')
-    msgs = convo.read()
-
-    return str(msgs)
 
 @app.route('/send', methods=['GET', 'POST'])
 def process_send():
@@ -36,29 +23,10 @@ def process_send():
         f.close()
 
         lines = open(AUDIOFILE, "r").readlines()
-        if re.match('RIFF.*WAVE', lines[0]): # It is a wave file
-            originalname = AUDIOFILE
-        else: # It is a PCM file
-            #print "line[0]: {}".format(lines[0])
-            #metadata = lines[0]
-            #try:
-            #    originalname = re.search('[\w]+\.[a-zA-Z]+', metadata).group(0)
-            #    print "  filename inside line[0]: {}".format(originalname)
-            #except:
-            #    originalname = ""
-            #    print "  no valid filename found"
-            #    
-            #lines[0] = ""
-            #f = open(AUDIOFILE, 'w')
-            #for line in lines:
-            #    f.write(line)
-            #f.close()
-            originalname = AUDIOFILE
-            pass
 
         # Here's where the magic happens
         pa = ProcessAudio()
-        pa.load(AUDIOFILE, originalname)
+        pa.load(AUDIOFILE)
         res = pa.report()
         print "Got report:", res
         
@@ -74,87 +42,10 @@ def process_send():
     
     return "File was not successfully sent"
 
-@app.route('/getback', methods=['GET', 'POST'])
-def process_getback():
-    print "[Request headers]:", request.headers
-    print "[Request data]:", len(request.data)
-    print "[Request form]:", request.form
-    
-    if request.data:
-        print "[Request data]:", request.data
-
-    return "Not done yet\n"
-
-""" Get the last 20 messages of Amy/Jake convo"""
-@app.route('/getconvomsgsAmyJake', methods=['GET', 'POST'])
-def process_getconvomsgsAmyJake():
+""" Get the previously sent messages in the conversation """
+@app.route('/getconvomsgs', methods=['GET', 'POST'])
+def process_getconvomsgs():
     print request.form
-    
-    convo = open("amyjake.json", 'r')
-    msgs = convo.read()
-    print(msgs)
-
-    return str(msgs)
-
-""" Get the last 20 messages of Amy/Charlie convo"""
-@app.route('/getconvomsgsAmyCharlie', methods=['GET', 'POST'])
-def process_getconvomsgsAmyCharlie():
-    print request.form
-    user1 = request.form['user1']
-    user2 = request.form['user2']
-    howmany = request.form['num_msgs']
-    
-    convo = open("convo.json", 'r')
-    msgs = convo.read()
-
-    return str(msgs)
-
-""" Get the last 20 messages of Amy/ECR convo"""
-@app.route('/getconvomsgsAmyECR', methods=['GET', 'POST'])
-def process_getconvomsgsAmyECR():
-    print request.form
-    user1 = request.form['user1']
-    user2 = request.form['user2']
-    howmany = request.form['num_msgs']
-    
-    convo = open("convo.json", 'r')
-    msgs = convo.read()
-
-    return str(msgs)
-
-""" Get the last 20 messages of Jake/Charlie convo"""
-@app.route('/getconvomsgsJakeCharlie', methods=['GET', 'POST'])
-def process_getconvomsgsJakeCharlie():
-    print request.form
-    user1 = request.form['user1']
-    user2 = request.form['user2']
-    howmany = request.form['num_msgs']
-    
-    convo = open("convo.json", 'r')
-    msgs = convo.read()
-
-    return str(msgs)
-
-""" Get the last 20 messages of Jake/ECR convo"""
-@app.route('/getconvomsgsJakeECR', methods=['GET', 'POST'])
-def process_getconvomsgsJakeECR():
-    print request.form
-    user1 = request.form['user1']
-    user2 = request.form['user2']
-    howmany = request.form['num_msgs']
-    
-    convo = open("convo.json", 'r')
-    msgs = convo.read()
-
-    return str(msgs)
-
-""" Get the last 20 messages of ECR/Charlie convo"""
-@app.route('/getconvomsgsECRCharlie', methods=['GET', 'POST'])
-def process_getconvomsgsECRCharlie():
-    print request.form
-    user1 = request.form['user1']
-    user2 = request.form['user2']
-    howmany = request.form['num_msgs']
     
     convo = open("convo.json", 'r')
     msgs = convo.read()

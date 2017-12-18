@@ -27,12 +27,13 @@ class ProcessAudio(object):
         self.filename = None
         self.emotions = None
 
-    def load(self, audiofile, originalname):
+    def load(self, originalname):
         # Load + convert audio
         print ("Loading sound file <{}>...".format(originalname))
 	name = originalname.split(".")[0]
 	ext = originalname.split(".")[-1].lower()
 
+        audiofile = originalname
         if ext == MP3:
             newfilename = name + ".wav"
             old = AudioSegment.from_mp3(audiofile)
@@ -127,31 +128,31 @@ class ProcessAudio(object):
         r = g = b = 255
 
         if order[0][0] == "anger":
-            r = 255 * order[0][1]
-            g = 255 * self.emotions['fear'] * .25
-            b = 255 * (1-self.emotions['anger'])
+            r *= order[0][1]
+            g *= self.emotions['fear'] * .25
+            b *= (1-self.emotions['anger'])
         elif order[0][0] == "fear":
-            g = 255 * order[0][1]
-            r = 255 * self.emotions['anger'] * .25
-            b = 255 * self.emotions['fear']
+            g *= order[0][1]
+            r *= self.emotions['anger'] * .25
+            b *= self.emotions['fear']
         elif order[0][0] == "happiness":
             r = g = 255 * order[0][1] * .8
-            b = 255 * (1-self.emotions['sadness']) * .25
+            b *= (1-self.emotions['sadness']) * .25
         elif order[0][0] == "sadness":
-            b = 255 * order[0][1]
-            r = 255 * self.emotions['anger'] * .3
-            g = 255 * self.emotions['fear'] * .25
+            b *= order[0][1]
+            r *= self.emotions['anger'] * .3
+            g *= self.emotions['fear'] * .25
         elif order[0][0] == "neutrality":
-            r = 255 * self.emotions['anger']   * .6
-            g = 255 * self.emotions['fear']    * .6
-            b = 255 * self.emotions['sadness'] * .6
+            r *= self.emotions['anger']   * .6
+            g *= self.emotions['fear']    * .6
+            b *= self.emotions['sadness'] * .6
 
         a = 255 * (1-self.emotions['neutrality'])
         res = {}
         res['alpha'] = str(int(round(a)))
-        res['red'] = str(int(round(r)))
+        res['red']   = str(int(round(r)))
         res['green'] = str(int(round(g)))
-        res['blue'] = str(int(round(b)))
+        res['blue']  = str(int(round(b)))
 
         return res
 
