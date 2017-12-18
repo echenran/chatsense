@@ -10,14 +10,14 @@ voice with an emoji corresponding to the sender’s dominant emotion.
 - Middleware: Java
 
 Once a user speaks their message into the phone, Chatsense sends the audio clip
-to the PythonAnywhere server, which processes it by:
+to the server in the cloud, which processes it by:
 
 - stripping the text out from the audio (Google Cloud Speech)
 - analyzing the emotion in the speaker's tone (Vokaturi)
 - synthesizing the breakdown of the speaker's emotion and creating a unique
-color for the message
+color for the message (original algorithm)
 
-Then, all this information is sent back to the client, which algorithmically
+Then, all this information is sent back to the client, which programmatically
 determines what emoji the message is to be accompanied by and sends the message
 in the color of the speaker's tone with the accompanying emoji.
 
